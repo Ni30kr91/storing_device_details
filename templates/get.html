@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Device Information</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+  <h1>Device Information</h1>
+
+  <h2>Device List</h2>
+  <table id="deviceTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Type</th>
+        <th>Browser</th>
+        <th>Browser Version</th>
+        <th>Created At</th>
+        <th>Screen Resolution</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    $(document).ready(function() {
+      // Load devices on page load
+      getDevices();
+    });
+
+    function getDevices() {
+      $.ajax({
+        url: 'http://localhost:8080/get/device',
+        type: 'GET',
+        success: function(response) {
+          var devices = response.data;
+          var deviceTableBody = $('#deviceTable tbody');
+
+          // Clear table rows
+          deviceTableBody.empty();
+
+          // Populate table with device data
+          devices.forEach(function(device) {
+            var row = '<tr>' +
+              '<td>' + device.id + '</td>' +
+              '<td>' + device.type + '</td>' +
+              '<td>' + device.browser + '</td>' +
+              '<td>' + device.browser_version + '</td>' +
+              '<td>' + device.created_at + '</td>' +
+              '<td>' + device.screen_resolution + '</td>' +
+              '</tr>';
+
+            deviceTableBody.append(row);
+          });
+        },
+        error: function(error) {
+          console.log('Error:', error);
+        }
+      });
+    }
+  </script>
+</body>
+</html>
